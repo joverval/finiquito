@@ -79,36 +79,6 @@
     <section class="card results-section" aria-labelledby="results-title" hidden>
       <h2 id="results-title">Resultados</h2>
 
-      <div class="results-grid">
-        <div class="result-card">
-          <h3>Indemnización (tope 90 UF)</h3>
-          <dl class="result-list">
-            <div class="result-row highlight">
-              <dt>Monto</dt>
-              <dd id="res-indemnizacion">—</dd>
-            </div>
-            <div class="result-row">
-              <dt>Tope mensual</dt>
-              <dd><span class="tope-detail" id="res-tope-uf">—</span></dd>
-            </div>
-          </dl>
-        </div>
-
-        <div class="result-card">
-          <h3>Vacaciones (salario real)</h3>
-          <dl class="result-list">
-            <div class="result-row highlight">
-              <dt>Monto</dt>
-              <dd id="res-vacaciones">—</dd>
-            </div>
-            <div class="result-row">
-              <dt>Valor día</dt>
-              <dd id="res-valor-dia">—</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-
       <div class="total-card">
         <div class="result-row highlight total-line">
           <dt>Total Finiquito</dt>
@@ -118,6 +88,37 @@
 
       <details class="breakdown" open>
         <summary>Desglose del cálculo</summary>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <h3>Indemnización (tope 90 UF)</h3>
+            <dl class="result-list">
+              <div class="result-row highlight">
+                <dt>Monto</dt>
+                <dd id="res-indemnizacion">—</dd>
+              </div>
+              <div class="result-row">
+                <dt>Tope mensual</dt>
+                <dd><span class="tope-detail" id="res-tope-uf">—</span></dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="result-card">
+            <h3>Vacaciones (salario real)</h3>
+            <dl class="result-list">
+              <div class="result-row highlight">
+                <dt>Monto</dt>
+                <dd id="res-vacaciones">—</dd>
+              </div>
+              <div class="result-row">
+                <dt>Valor día</dt>
+                <dd id="res-valor-dia">—</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
         <div class="breakdown-grid">
           <div class="breakdown-section">
             <h4>Datos de Entrada</h4>
@@ -151,7 +152,7 @@
           <div class="breakdown-section">
             <h4>Resultado Final</h4>
             <dl id="breakdown-total">
-              <div class="total"><dt>Total Finiquito</dt><dd id="bd-total">—</dd></div>
+              <div class="total highlight"><dt>Total Finiquito</dt><dd id="bd-total">—</dd></div>
             </dl>
           </div>
         </div>

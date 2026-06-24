@@ -398,6 +398,11 @@ header h1 {
   margin-top: 0.875rem;
 }
 
+.breakdown .results-grid {
+  margin-top: 0.875rem;
+  margin-bottom: 1rem;
+}
+
 .breakdown-section {
   background: var(--card-bg-alt);
   border: 1px solid var(--border);
