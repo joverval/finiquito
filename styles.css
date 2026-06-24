@@ -289,6 +289,99 @@ header h1 {
   margin-top: 0.1rem;
 }
 
+/* ── Total card (finiquito) ── */
+.total-card {
+  background: var(--card-bg-alt);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.total-line dt {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.total-line dd {
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+/* ── Causal selector ── */
+.causal-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.125rem;
+  padding: 0.875rem 1rem;
+  background: var(--card-bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  align-items: flex-start;
+}
+
+.causal-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.causal-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+}
+
+.causal-group select {
+  height: 2.5rem;
+  padding: 0 0.625rem;
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: #000;
+  cursor: pointer;
+  min-width: 320px;
+  transition: border-color var(--transition);
+}
+
+.causal-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  color: var(--fg) !important;
+  padding-top: 1.4rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.causal-note {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0.125rem 0 0 1.5rem;
+}
+
 /* ── Breakdown ── */
 .breakdown { border-top: 2px solid var(--border); padding-top: 1.25rem; }
 
