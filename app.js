@@ -1,21 +1,13 @@
 /**
  * Finiquito — Calculadora de Indemnización Chile
  * Pure client-side severance pay calculator.
- * No build step, no server, no dependencies.
  */
 
 // ── DOM references ──
 const $ = (sel) => document.querySelector(sel);
 
-const inputRefs = {
-  netSalary:    $('#net-salary'),
-  yearsService: $('#years-service'),
-  vacationDays: $('#vacation-days'),
-  ufValue:      $('#uf-value'),
-};
-
 // ── State ──
-let ufValue = 39740;       // default fallback
+let ufValue = 39740;       // default fallback, overwritten by API
 let ufDate = '';
 
 // ── Currency ──
@@ -24,8 +16,6 @@ function fmtCLP(n) {
 }
 
 // ── Causal rules ──
-// Each causal has a base multiplier for the indemnización
-// and an optional recargo if declared unjustified (Art. 168 CT)
 const CAUSAL_RULES = {
   'art161':   { base: 1.0, recargo: 0.3, label: 'Art. 161', desc: 'Indemnización completa (30 días por año, tope 90 UF)' },
   'art159-1': { base: 0,   recargo: 0,   label: 'Art. 159 N°1', desc: 'Mutuo acuerdo: sin indemnización legal' },
@@ -35,52 +25,44 @@ const CAUSAL_RULES = {
 
 // ── Core calculation ──
 function calculate() {
-  const netSalary    = parseFloat(inputRefs.netSalary.value) || 0;
-  const yearsService = parseFloat(inputRefs.yearsService.value) || 0;
-  const vacationDays = parseFloat(inputRefs.vacationDays.value) || 0;
-  const uf           = parseFloat(inputRefs.ufValue.value) || ufValue;
+  const netSalary    = parseFloat($('#net-salary').value) || 0;
+  const yearsService = parseFloat($('#years-service').value) || 0;
+  const vacationDays = parseFloat($('#vacation-days').value) || 0;
+  const uf           = parseFloat($('#uf-value').value) || ufValue;
 
-  if (netSalary <= 0 && yearsService <= 0 && vacationDays <= 0) {
-    $('.results-section').hidden = true;
-    return;
-  }
-
-  // Causal logic
   const causal = $('#causal-select').value;
   const rule = CAUSAL_RULES[causal];
   const injustificado = $('#injustificado-check').checked;
 
-  // Indemnización base (30d × years), with 90 UF cap
+  // Indemnización: min(sueldo, 90 UF) × años × base_causal
   const tope90UF = 90 * uf;
   const cappedMonthly = Math.min(netSalary, tope90UF);
   const indemBase = cappedMonthly * yearsService * rule.base;
 
-  // Recargo if declared unjustified
+  // Recargo si injustificado
   const recargoPct = (injustificado && rule.recargo > 0) ? rule.recargo : 0;
   const recargoMonto = indemBase * recargoPct;
   const indemnizacion = indemBase + recargoMonto;
 
-  // Vacaciones: días × (sueldo / 30)
+  // Vacaciones: sueldo real (sin tope) / 30 × días
   const dailySalary = netSalary / 30;
   const vacaciones = vacationDays * dailySalary;
 
   const total = indemnizacion + vacaciones;
 
-  // ── Display results ──
-  const causalLabel = rule.label;
-
-  if (rule.base === 0 && indemnizacion === 0) {
+  // ── Results display ──
+  if (indemnizacion === 0) {
     $('#res-indemnizacion').textContent = 'No aplica';
-    $('#res-tope-uf').textContent       = `${rule.desc}`;
+    $('#res-tope-uf').textContent = rule.desc;
   } else {
     $('#res-indemnizacion').textContent = fmtCLP(indemnizacion);
-    const topeText = netSalary > tope90UF
-      ? `Sueldo topado a 90 UF (${fmtCLP(tope90UF)})`
+    const topeNote = netSalary > tope90UF
+      ? `Sueldo topado de ${fmtCLP(netSalary)} a ${fmtCLP(tope90UF)}`
       : `Sin tope (90 UF = ${fmtCLP(tope90UF)})`;
     if (recargoPct > 0) {
-      $('#res-tope-uf').textContent = topeText + ` + recargo ${Math.round(recargoPct*100)}% (injustificado)`;
+      $('#res-tope-uf').textContent = topeNote + ` · recargo ${Math.round(recargoPct*100)}%`;
     } else {
-      $('#res-tope-uf').textContent = topeText;
+      $('#res-tope-uf').textContent = topeNote;
     }
   }
 
@@ -89,11 +71,11 @@ function calculate() {
   $('#res-total').textContent      = fmtCLP(total);
 
   // ── Breakdown ──
-  $('#bd-sueldo').textContent        = fmtCLP(netSalary);
-  $('#bd-anos').textContent          = yearsService.toLocaleString('es-CL', {maximumFractionDigits: 1});
-  $('#bd-dias').textContent          = Math.round(vacationDays).toString();
-  $('#bd-uf').textContent            = fmtCLP(uf);
-  $('#bd-tope').textContent          = fmtCLP(tope90UF);
+  $('#bd-sueldo').textContent = fmtCLP(netSalary);
+  $('#bd-anos').textContent   = yearsService.toLocaleString('es-CL', {maximumFractionDigits: 1});
+  $('#bd-dias').textContent   = Math.round(vacationDays).toString();
+  $('#bd-uf').textContent     = fmtCLP(uf);
+  $('#bd-tope').textContent   = fmtCLP(tope90UF);
 
   if (rule.base === 0) {
     $('#bd-sueldo-topado').textContent = rule.desc;
@@ -109,30 +91,31 @@ function calculate() {
     }
   }
 
-  $('#bd-diario').textContent        = fmtCLP(dailySalary);
-  $('#bd-dias-pend').textContent     = '× ' + Math.round(vacationDays).toString();
-  $('#bd-sub-vac').textContent       = fmtCLP(vacaciones);
-  $('#bd-total').textContent         = fmtCLP(total);
+  $('#bd-diario').textContent    = fmtCLP(dailySalary);
+  $('#bd-dias-pend').textContent = '× ' + Math.round(vacationDays).toString();
+  $('#bd-sub-vac').textContent   = fmtCLP(vacaciones);
+  $('#bd-total').textContent     = fmtCLP(total);
 
-  // Show results
-  $('.results-section').hidden = false;
+  // Show results if there's any input
+  if (netSalary > 0 || yearsService > 0 || vacationDays > 0) {
+    $('.results-section').hidden = false;
+  }
 }
 
-// ── Causal change handler ──
+// ── Causal UI ──
 function updateCausalUI() {
   const causal = $('#causal-select').value;
   const rule = CAUSAL_RULES[causal];
-
-  // Show/hide unjustified checkbox based on whether recargo exists
-  const grupo = $('#injustificado-group');
+  const row = $('#injustificado-row');
   const note = $('#causal-note');
 
   if (rule.recargo > 0) {
-    grupo.hidden = false;
-    note.textContent = `Recargo del ${Math.round(rule.recargo * 100)}% sobre indemnización base si el tribunal declara el despido injustificado (Art. 168 CT).`;
+    row.hidden = false;
+    note.textContent = `Recargo del ${Math.round(rule.recargo * 100)}% si el tribunal declara el despido injustificado (Art. 168 CT).`;
   } else {
-    grupo.hidden = true;
+    row.hidden = true;
     $('#injustificado-check').checked = false;
+    note.textContent = '';
   }
 
   calculate();
@@ -154,18 +137,29 @@ async function fetchUF() {
     ufDate = 'valor por defecto';
   }
 
-  inputRefs.ufValue.value = Math.round(ufValue).toString();
+  $('#uf-value').value = Math.round(ufValue).toString();
   $('#rate-value').textContent = `$${ufValue.toLocaleString('es-CL', {maximumFractionDigits: 2})} CLP`;
   $('#rate-date').textContent  = `(${ufDate})`;
   $('#rate-info').hidden = false;
 
-  // Recalculate if user already entered data before UF arrived
+  // Set defaults after UF is known
+  const defaultSalary = Math.round(90 * ufValue);
+  if (!$('#net-salary').value) {
+    $('#net-salary').value = defaultSalary;
+  }
+  if (!$('#years-service').value) {
+    $('#years-service').value = 3;
+  }
+  if (!$('#vacation-days').value) {
+    $('#vacation-days').value = 5;
+  }
+
   calculate();
 }
 
-// ── Event handlers ──
-Object.values(inputRefs).forEach(el => {
-  el.addEventListener('input', calculate);
+// ── Events ──
+['#net-salary', '#years-service', '#vacation-days', '#uf-value'].forEach(sel => {
+  $(sel).addEventListener('input', calculate);
 });
 
 $('#causal-select').addEventListener('change', updateCausalUI);

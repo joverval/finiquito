@@ -25,12 +25,12 @@
       <h2 id="inputs-title">Completa los datos</h2>
       <p class="hint">Todos los campos se actualizan al instante al modificar cualquier valor.</p>
 
-      <div class="input-grid">
+      <div class="input-grid finiquito-grid">
         <div class="input-group">
           <label for="net-salary">Sueldo Líquido Mensual (CLP)</label>
           <div class="input-with-suffix">
             <span class="prefix">$</span>
-            <input type="number" id="net-salary" inputmode="decimal" step="1000" min="0" placeholder="0">
+            <input type="number" id="net-salary" inputmode="decimal" step="1000" min="0" placeholder="90 UF">
           </div>
         </div>
 
@@ -38,7 +38,7 @@
           <label for="years-service">Años de Servicio</label>
           <div class="input-with-suffix">
             <span class="prefix">#</span>
-            <input type="number" id="years-service" inputmode="decimal" step="0.5" min="0" max="50" placeholder="0">
+            <input type="number" id="years-service" inputmode="decimal" step="0.5" min="0" max="50" placeholder="3">
           </div>
         </div>
 
@@ -46,13 +46,11 @@
           <label for="vacation-days">Días de Vacaciones Pendientes</label>
           <div class="input-with-suffix">
             <span class="prefix">Días</span>
-            <input type="number" id="vacation-days" inputmode="decimal" step="1" min="0" max="365" placeholder="0">
+            <input type="number" id="vacation-days" inputmode="decimal" step="1" min="0" max="365" placeholder="5">
           </div>
         </div>
-      </div>
 
-      <div class="causal-section">
-        <div class="causal-group">
+        <div class="input-group causal-group">
           <label for="causal-select">Causal de Despido</label>
           <select id="causal-select">
             <option value="art161">Art. 161 — Necesidades de la empresa / Desahucio</option>
@@ -60,12 +58,12 @@
             <option value="art159-2">Art. 159 N°2 — Renuncia Voluntaria</option>
             <option value="art160">Art. 160 — Despido Disciplinario</option>
           </select>
-        </div>
-        <div class="causal-group" id="injustificado-group" hidden>
-          <label class="checkbox-label">
-            <input type="checkbox" id="injustificado-check">
-            Declarado injustificado por tribunal (Art. 168 CT)
-          </label>
+          <div class="injustificado-row" id="injustificado-row" hidden>
+            <label class="checkbox-label">
+              <input type="checkbox" id="injustificado-check">
+              Declarado injustificado (Art. 168)
+            </label>
+          </div>
           <p class="causal-note" id="causal-note"></p>
         </div>
       </div>
@@ -83,21 +81,21 @@
 
       <div class="results-grid">
         <div class="result-card">
-          <h3>Indemnización (Art. 163)</h3>
+          <h3>Indemnización (tope 90 UF)</h3>
           <dl class="result-list">
             <div class="result-row highlight">
               <dt>Monto</dt>
               <dd id="res-indemnizacion">—</dd>
             </div>
             <div class="result-row">
-              <dt>Tope 90 UF aplicado</dt>
+              <dt>Tope mensual</dt>
               <dd id="res-tope-uf">—</dd>
             </div>
           </dl>
         </div>
 
         <div class="result-card">
-          <h3>Vacaciones</h3>
+          <h3>Vacaciones (salario real)</h3>
           <dl class="result-list">
             <div class="result-row highlight">
               <dt>Monto</dt>
@@ -132,28 +130,28 @@
             </dl>
           </div>
 
-          <div class="breakdown-section deductions">
-            <h4>Indemnización (Art. 163 CT)</h4>
+          <div class="breakdown-section">
+            <h4>Indemnización (con tope)</h4>
             <dl id="breakdown-indemnizacion">
-              <div><dt>Sueldo base (topado)</dt><dd id="bd-sueldo-topado">—</dd></div>
+              <div><dt>Sueldo topado a 90 UF</dt><dd id="bd-sueldo-topado">—</dd></div>
               <div><dt>× Años de servicio</dt><dd id="bd-multiplicador">—</dd></div>
               <div class="subtotal"><dt>Subtotal indemnización</dt><dd id="bd-sub-indem">—</dd></div>
             </dl>
           </div>
 
-          <div class="breakdown-section tax">
-            <h4>Vacaciones</h4>
+          <div class="breakdown-section">
+            <h4>Vacaciones (salario real)</h4>
             <dl id="breakdown-vacaciones">
-              <div><dt>Valor día (sueldo / 30)</dt><dd id="bd-diario">—</dd></div>
+              <div><dt>Sueldo diario (sin tope)</dt><dd id="bd-diario">—</dd></div>
               <div><dt>× Días pendientes</dt><dd id="bd-dias-pend">—</dd></div>
               <div class="subtotal"><dt>Subtotal vacaciones</dt><dd id="bd-sub-vac">—</dd></div>
             </dl>
           </div>
 
-          <div class="breakdown-section net">
+          <div class="breakdown-section">
             <h4>Resultado Final</h4>
             <dl id="breakdown-total">
-              <div class="total highlight"><dt>Total Finiquito</dt><dd id="bd-total">—</dd></div>
+              <div class="total"><dt>Total Finiquito</dt><dd id="bd-total">—</dd></div>
             </dl>
           </div>
         </div>
@@ -161,26 +159,26 @@
     </section>
 
     <section class="card settings-section" aria-labelledby="settings-title">
-      <h2 id="settings-title">Parámetros (ajustables)</h2>
-      <p class="hint">El valor UF se obtiene automáticamente de mindicador.cl. Puedes ajustarlo manualmente si lo necesitas.</p>
+      <h2 id="settings-title">Parámetros</h2>
+      <p class="hint">El valor UF se obtiene de mindicador.cl. Podés ajustarlo manualmente.</p>
 
       <div class="settings-grid">
         <div class="setting-group">
           <label for="uf-value">UF vigente (CLP)</label>
-          <div class="setting-input">
+          <div class="input-with-suffix">
             <span class="prefix">$</span>
-            <input type="number" id="uf-value" step="1" min="0" value="39740">
+            <input type="number" id="uf-value" step="1" min="0">
           </div>
-          <p class="setting-note">Actualizado automáticamente desde mindicador.cl</p>
+          <p class="setting-note">Actualizado desde mindicador.cl al cargar la página</p>
         </div>
       </div>
     </section>
 
     <footer>
-      <p>Datos: mindicador.cl (UF). Cálculo referencial según Art. 163 del Código del Trabajo. No constituye asesoría legal.</p>
+      <p>Cálculo referencial según Código del Trabajo chileno. No constituye asesoría legal.</p>
     </footer>
   </main>
 
-  <script type="module" src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
