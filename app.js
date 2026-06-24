@@ -7,7 +7,7 @@
 const $ = (sel) => document.querySelector(sel);
 
 // ── State ──
-let ufValue = 39740;       // default fallback, overwritten by API
+let ufValue = 40000;       // default fallback, overwritten by API
 let ufDate = '';
 
 // ── Currency ──
@@ -172,9 +172,10 @@ function bindEvents() {
 }
 
 bindEvents();
+updateCausalUI();
 
 // ── Init ──
 (async function init() {
   await fetchUF();
-  updateCausalUI();
+  calculate();  // recalculate with live UF value
 })();
