@@ -449,7 +449,7 @@ header h1 {
 }
 
 .breakdown-section .subtotal dt { font-weight: 700; }
-.breakdown-section .subtotal dd { font-weight: 700; color: var(--warning); }
+.breakdown-section .subtotal dd { font-weight: 700; color: var(--warning); white-space: normal; word-break: break-word; }
 
 .breakdown-section .total {
   border-top: 2px solid var(--border);
