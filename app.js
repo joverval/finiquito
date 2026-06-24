@@ -158,12 +158,20 @@ async function fetchUF() {
 }
 
 // ── Events ──
-['#net-salary', '#years-service', '#vacation-days', '#uf-value'].forEach(sel => {
-  $(sel).addEventListener('input', calculate);
-});
+function bindEvents() {
+  ['#net-salary', '#years-service', '#vacation-days', '#uf-value'].forEach(sel => {
+    const el = $(sel);
+    if (el) el.addEventListener('input', calculate);
+  });
 
-$('#causal-select').addEventListener('change', updateCausalUI);
-$('#injustificado-check').addEventListener('change', calculate);
+  const causal = $('#causal-select');
+  if (causal) causal.addEventListener('change', updateCausalUI);
+
+  const injust = $('#injustificado-check');
+  if (injust) injust.addEventListener('change', calculate);
+}
+
+bindEvents();
 
 // ── Init ──
 (async function init() {
