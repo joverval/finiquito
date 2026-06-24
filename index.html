@@ -53,10 +53,10 @@
         <div class="input-group causal-group">
           <label for="causal-select">Causal de Despido</label>
           <select id="causal-select" onchange="updateCausalUI()">
-            <option value="art161">Art. 161 — Necesidades de la empresa / Desahucio</option>
-            <option value="art159-1">Art. 159 N°1 — Mutuo Acuerdo</option>
-            <option value="art159-2">Art. 159 N°2 — Renuncia Voluntaria</option>
-            <option value="art160">Art. 160 — Despido Disciplinario</option>
+            <option value="art161">Art. 161 — Necesidades de la empresa / Desahucio (100% indemnización)</option>
+            <option value="art159-1">Art. 159 N°1 — Mutuo Acuerdo (sin indemnización)</option>
+            <option value="art159-2">Art. 159 N°2 — Renuncia Voluntaria (sin indemnización)</option>
+            <option value="art160">Art. 160 — Despido Disciplinario (sin indemnización, +50% si injustificado)</option>
           </select>
           <div class="injustificado-row" id="injustificado-row" hidden>
             <label class="checkbox-label">
